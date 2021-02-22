@@ -1,0 +1,14 @@
+server:
+  port: 8887
+
+project:
+
+spring:
+  datasource:
+    url: jdbc:sqlite:/Users/charn/.recent-err/data.splite.db
+    driver-class-name: org.sqlite.JDBC
+  jackson:
+    time-zone: Asia/Chongqing
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.charn.recenterror.dao.SqlMapper">
+
+    <resultMap id="BaseMap" type="org.charn.recenterror.model.db.Sql">
+        <id column="qid" property="id"/>
+        <result column="name" property="name"/>
+        <result column="sql" property="sql"/>
+        <result column="db_conn_id" property="dbConnId"/>
+         <collection property="argList" javaType="arraylist" ofType="org.charn.recenterror.model.db.SqlArg">
+            <id column="aid" property="id"/>
+            <result column="sql_id" property="sqlId"/>
+            <result column="arg_name" property="argName"/>
+            <result column="arg_type" property="type"/>
+            <result column="arg_val" property="argVal"/>
+        </collection>
+    </resultMap>
+    <resultMap id="ArgMap" type="org.charn.recenterror.model.db.SqlArg">
+        <id column="id" property="id"/>
+        <result column="sql_id" property="sqlId"/>
+        <result column="arg_name" property="argName"/>
+        <result column="arg_type" property="type"/>
+        <result column="arg_val" property="argVal"/>
+    </resultMap>
+
+    <insert id="saveConn">
+        insert into db_conn(id, name, host, username, password, database)
+        values (#{id}, #{name}, #{host}, #{username}, #{password}, #{database})
+    </insert>
+
+    <insert id="saveArgList">
+        insert into sql_query_arg(id, sql_id, arg_name, arg_val, arg_type)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.sqlId}, #{item.argName}, #{item.argVal}, #{item.type})
+        </foreach>
+    </insert>
+
+    <insert id="saveSql">
+        insert into sql_query(id, name, sql, db_conn_id)
+        values (#{id}, #{name}, #{sql}, #{dbConnId})
+    </insert>
+    <insert id="saveHistory">
+        insert into sql_history(id, content, `time`)
+        values (#{id}, #{content}, #{time})
+    </insert>
+    <delete id="deleteAllHistory">
+        delete from sql_history
+    </delete>
+
+    <select id="findById" resultMap="BaseMap">
+        select *, q.id qid, a.id aid from sql_query q
+        left join sql_query_arg a on a.sql_id = q.id
+        where q.id = #{id}
+    </select>
+
+    <select id="findAllConn" resultType="org.charn.recenterror.model.db.DbConn">
+        select * from db_conn
+    </select>
+    <select id="findConnById" resultType="org.charn.recenterror.model.db.DbConn">
+        select * from db_conn where id = #{id}
+    </select>
+    <select id="findAll" resultType="org.charn.recenterror.model.db.Sql">
+        select * from sql_query
+    </select>
+    <select id="findArgBySqlId" resultMap="ArgMap">
+        select * from sql_query_arg where sql_id = #{id}
+    </select>
+    <select id="allHistory" resultType="org.charn.recenterror.model.db.SqlHistory">
+        select * from sql_history
+    </select>
+
+</mapper>
