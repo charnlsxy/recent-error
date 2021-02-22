@@ -132,11 +132,12 @@ public class MysqlErrService {
         return argList.stream().collect(Collectors.toMap(SqlArg::getArgName, SqlArg::getArgVal));
     }
 
-    public void saveConn(String name, MysqlConfig config) {
+    public DbConn saveConn(String name, MysqlConfig config) {
         DbConn conn = new DbConn();
         BeanUtils.copyProperties(config, conn);
         conn.setName(name);
         mapper.saveConn(conn);
+        return conn;
     }
 
     public List<DbConn> allConn() {

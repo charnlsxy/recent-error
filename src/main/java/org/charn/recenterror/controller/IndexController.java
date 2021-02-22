@@ -58,9 +58,8 @@ public class IndexController {
     }
 
     @RequestMapping("/saveConn")
-    public Integer saveDbConn(@NotEmpty String name, @Valid @RequestBody MysqlConfig config){
-        mysqlErrService.saveConn(name, config);
-        return 0;
+    public DbConn saveDbConn(@NotEmpty String name, @Valid @RequestBody MysqlConfig config){
+        return mysqlErrService.saveConn(name, config);
     }
 
     @RequestMapping("/allConn")
